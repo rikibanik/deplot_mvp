@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Time Tracking</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="github" class="flex flex-col items-center justify-center mt-2">
+        <button class="bg-gray-500 text-white rounded border p-2 w-40" id="connect-btn">Connect to github</button>
+        <button class="bg-gray-500 text-white rounded border p-2 w-40 mt-2" id="get-repos">GET REPO LIST</button>
+    </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const btn = document.getElementById('connect-btn');
+        btn.addEventListener('click', function () {
+    const popup = window.open(
+        '/user/auth/github',
+        'popup'
+    );
+
+    const timer = setInterval(function () {
+        if (popup.closed) {
+            clearInterval(timer);
+            
+        }
+    }, 500);
+});
+    
+        const getReposBtn = document.getElementById('get-repos');
+        getReposBtn.addEventListener('click', function() {
+            fetch('/github/repos')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.repositories);
+                    const repositories = data.repositories;
+                    const dropdown = document.createElement('select');
+                    dropdown.classList.add('bg-gray-200', 'rounded', 'p-2', 'mt-2');
+    
+                    repositories.forEach(repo => {
+                        const option = document.createElement('option');
+                        option.value = repo.name;
+                        option.textContent = repo.name;
+                        dropdown.appendChild(option);
+                    });
+    
+                    const container = document.getElementById('github');
+                    if (container) container.appendChild(dropdown);
+                    else console.error("Element with ID 'github' not found.");
+                })
+                .catch(error => {
+                    console.error('Error fetching repos:', error.message);
+                });
+        });
+    });
+</script>
+</body>
+</html>

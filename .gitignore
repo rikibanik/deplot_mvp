@@ -1,0 +1,6 @@
+/server/node_modules
+/server/.env
+/worker/node_modules
+/worker/.env
+/worker/deployment
+/server/deployt.2025-04-10.private-key.pem
