@@ -11,6 +11,10 @@
     <div id="github" class="flex flex-col items-center justify-center mt-2">
         <button class="bg-gray-500 text-white rounded border p-2 w-40" id="connect-btn">Connect to github</button>
         <button class="bg-gray-500 text-white rounded border p-2 w-40 mt-2" id="get-repos">GET REPO LIST</button>
+        
+    </div>
+    <div>
+        <button>Deploy</button>
     </div>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -41,7 +45,7 @@
     
                     repositories.forEach(repo => {
                         const option = document.createElement('option');
-                        option.value = repo.name;
+                        option.value = repo.id;
                         option.textContent = repo.name;
                         dropdown.appendChild(option);
                     });

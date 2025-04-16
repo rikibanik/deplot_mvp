@@ -21,10 +21,14 @@ module.exports.storeGithubAccessToken = async (req, res) => {
 
     const userGithub = {
       installationId: installationId,
-      installationAccessToken: installationAccessToken,
       userId: req.user._id,
     }
-    const githubAccount = await githubAccountSchema.create(userGithub);
+
+    const githubAccount = await githubAccountSchema.findOneAndUpdate(
+      { userId: userGithub.userId },
+      userGithub,
+      { new: true, upsert: true }
+    );
     console.log("GitHub Account:", githubAccount);
   
    return res.redirect("/home");
@@ -41,7 +45,13 @@ module.exports.getRepositories = async (req, res) => {
         return res.status(400).json({ message: 'User has not installed the GitHub App' });
     }
     try {
-        const token = githubData.installationAccessToken;
+        const iid = githubData.installationId;
+        console.log('Installation ID:', iid);
+        const token = await getInstallationAccessToken(iid);
+        console.log('Token:', token);
+        if (!token) {
+            return res.status(400).json({ message: 'No token found' });
+        }
         console.log('Token:', token);
         const repos = await axios.get('https://api.github.com/installation/repositories', {
             headers: {
@@ -50,6 +60,7 @@ module.exports.getRepositories = async (req, res) => {
             },
         });
         const githubRepo = repos.data.repositories;
+        console.log('GitHub Repositories:', githubRepo);
         await githubServices.syncReposToDb(userId, githubRepo);
         res.json(repos.data);
     } catch (error) {

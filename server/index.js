@@ -28,4 +28,5 @@ app.get('/', (req, res) => {
 app.use('/user',require('./routes/userRoutes'));
 app.use('/github',require('./routes/githubRoutes'));
 app.use('/home',require('./routes/homeRoutes'));
+app.use('/deployments',require('./routes/deploymentRoutes'));
 server.listen(3000);

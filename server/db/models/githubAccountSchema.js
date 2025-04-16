@@ -12,7 +12,6 @@ const githubAccountSchema = new mongoose.Schema({
   githubUsername: String,
   githubId: Number,
   installationId: String,
-  installationAccessToken: String, // optional if you fetch on-demand
   repos: [
     {
       id: Number,
