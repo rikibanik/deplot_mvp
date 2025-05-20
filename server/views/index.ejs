@@ -14,8 +14,30 @@
         
     </div>
     <div>
-        <button>Deploy</button>
-    </div>
+        <form action="/deployments/new" class="flex flex-col items-center justify-center mt-2">
+            <label for="name">Select name(live app will be available as name.deployt.com)</label>
+            <input type="text" id="name" name="subdomain" class="bg-gray-200 rounded p-2 mt-2" placeholder="Enter the name   of the app">
+            <label for="workdir">WORKDIR (all the commands will run inside this e.g app donot use '/')</label>
+
+            <input type="text" id="workdir" name="workdir" class="bg-gray-200 rounded p-2 mt-2" placeholder="Enter the workdir">
+            <label for="build-command"> BUILD COMMAND</label>
+            <input type="text" id="build-command" name="build-command" class="bg-gray-200 rounded p-2 mt-2" placeholder="npm i">
+            <label for="run-command"> RUN COMMAND</label>
+            <input type="text" id="run-command" name="run-command" class="bg-gray-200 rounded p-2 mt-2" placeholder="node app.js">
+            <label for="port"> PORT</label>
+            <input type="text" id="port" name="port" class="bg-gray-200 rounded p-2 mt-2" placeholder="3000">
+            <select name="tech-stacf" id="tech-stack">
+                <option value="docker">Next JS</option>
+                <option value="nodejs">NodeJS</option>
+                <option value="python">Flask</option>
+                <option value="java">Fast API</option>
+                <option value="php" selected>auto</option>
+            </select>
+            <textarea name="env" id="env" placeholder="Enter env file"></textarea>
+            <button type="submit" class="w-40 bg-blue-200 mt-2 rounded p-2">Deploy</button>
+        </form>
+        
+    </div>cd 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const btn = document.getElementById('connect-btn');
@@ -38,11 +60,11 @@
             fetch('/github/repos')
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data.repositories);
-                    const repositories = data.repositories;
+                    
+                    const repositories = data;
                     const dropdown = document.createElement('select');
                     dropdown.classList.add('bg-gray-200', 'rounded', 'p-2', 'mt-2');
-    
+                    dropdown.name = 'repoId';
                     repositories.forEach(repo => {
                         const option = document.createElement('option');
                         option.value = repo.id;
@@ -51,7 +73,7 @@
                     });
     
                     const container = document.getElementById('github');
-                    if (container) container.appendChild(dropdown);
+                    if (container) document.getElementsByTagName('form')[0].insertBefore(dropdown, document.getElementsByTagName('form')[0].firstChild);
                     else console.error("Element with ID 'github' not found.");
                 })
                 .catch(error => {

@@ -14,8 +14,8 @@ exports.handleDeployment = async (req, res) => {
     log(`Received deployment request for ${repoName} on port ${port} with subdomain ${subdomain}`);
     console.log(repoUrl);
     await gitService.cloneRepo(repoUrl, repoName);
-    // await dockerService.deployContainer(repoName, port, subdomain);
-    // log(`${repoName} deployed successfully`);
+    await dockerService.deployContainer(repoName, port, subdomain);
+    log(`${repoName} deployed successfully`);
     res.json({ message: 'Deployed successfully' });
   } catch (error) {
     log(`Deployment failed: ${error.message}`);

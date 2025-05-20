@@ -6,8 +6,8 @@ module.exports.newDeployement = async (req, res) => {
     const repoId = req.query.repoId;
     const port = req.query.port;
     const subdomain = req.query.subdomain;
-    console.log(repoId)
-   
+    console.log('Repo Id: '+ repoId);
+    console.log(req.query)
     const installationId = await githubAccountSchema.findOne({ userId: userId });
     if (!installationId) {
         return res.status(400).json({ message: 'User has not installed the GitHub App' });
@@ -29,7 +29,8 @@ module.exports.newDeployement = async (req, res) => {
     if (!repoData) {
         return res.status(400).json({ message: 'No repo found' });
     }
-    const deploy = await axios.post(`${process.env.WORKER_URL}/deploy`, {
+    try {
+        const deploy = await axios.post(`${process.env.WORKER_URL}/deploy`, {
         repoId: repoData.id,
         port: port,
         subdomain: subdomain,
@@ -39,6 +40,11 @@ module.exports.newDeployement = async (req, res) => {
         token: token
     });
     console.log('Deploy:', deploy.data);
+    } catch (error) {
+        console.error('Error:', error);
+        return res.status(500).json({ message: 'Error during deployment' });
+    }
+    
     
     res.send(repoData);
 }
